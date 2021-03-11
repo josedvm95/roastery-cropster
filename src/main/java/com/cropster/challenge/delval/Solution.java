@@ -3,13 +3,16 @@ package com.cropster.challenge.delval;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.cropster.challenge.delval.constants.Constants;
 import com.cropster.challenge.delval.model.Facility;
 import com.cropster.challenge.delval.model.GreenCoffee;
 import com.cropster.challenge.delval.model.Machine;
@@ -42,7 +45,10 @@ public class Solution implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    setInitialValues();
+    generateTask2Data();
+
+    // Values I used for testing Task 1
+    // setInitialValues();
 
     // Test deleting a single Facility
     // testDeleteFacility();
@@ -52,6 +58,52 @@ public class Solution implements CommandLineRunner {
 
     // Cleanup the tables
     // cleanUpTables();
+  }
+
+  private void generateTask2Data() {
+    List<GreenCoffee> listCoffees = new ArrayList<GreenCoffee>();
+    for (String coffee : Constants.GREEN_COFFEES) {
+      listCoffees.add(new GreenCoffee(coffee));
+    }
+
+    greencoffeeRepository.saveAll(listCoffees);
+
+    List<Facility> listFacilities = new ArrayList<Facility>();
+    for (String facility : Constants.FACILITIES) {
+      listFacilities.add(new Facility(facility));
+    }
+
+    Machine m1 = new Machine(Constants.MACHINES[0], 20, listFacilities.get(0));
+    Machine m2 = new Machine(Constants.MACHINES[1], 45, listFacilities.get(0));
+    Machine m3 = new Machine(Constants.MACHINES[2], 45, listFacilities.get(0));
+    Machine m4 = new Machine(Constants.MACHINES[0], 20, listFacilities.get(1));
+    Machine m5 = new Machine(Constants.MACHINES[1], 20, listFacilities.get(1));
+    Machine m6 = new Machine(Constants.MACHINES[2], 45, listFacilities.get(1));
+
+
+    listFacilities.get(0).setMachines(new HashSet<>(Arrays.asList(m1, m2, m3)));
+    listFacilities.get(1).setMachines(new HashSet<>(Arrays.asList(m4, m5, m6)));
+
+    facilityRepository.saveAll(listFacilities);
+
+    Stock s1 = new Stock(listFacilities.get(0), listCoffees.get(0), generateRandomWeight());
+    Stock s2 = new Stock(listFacilities.get(0), listCoffees.get(1), generateRandomWeight());
+    Stock s3 = new Stock(listFacilities.get(0), listCoffees.get(2), generateRandomWeight());
+    Stock s4 = new Stock(listFacilities.get(0), listCoffees.get(3), generateRandomWeight());
+    Stock s5 = new Stock(listFacilities.get(0), listCoffees.get(4), generateRandomWeight());
+    Stock s6 = new Stock(listFacilities.get(1), listCoffees.get(0), generateRandomWeight());
+    Stock s7 = new Stock(listFacilities.get(1), listCoffees.get(1), generateRandomWeight());
+    Stock s8 = new Stock(listFacilities.get(1), listCoffees.get(2), generateRandomWeight());
+    Stock s9 = new Stock(listFacilities.get(1), listCoffees.get(3), generateRandomWeight());
+    Stock s10 = new Stock(listFacilities.get(1), listCoffees.get(4), generateRandomWeight());
+    List<Stock> listStocks = Arrays.asList(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
+    stockRepository.saveAll(listStocks);
+  }
+
+  private Integer generateRandomWeight() {
+    Random randomNumber = new Random();
+    return randomNumber.nextInt((Constants.MAX_WEIGHT - Constants.MIN_WEIGHT) + 1)
+        + Constants.MIN_WEIGHT;
   }
 
   private void setInitialValues() {
@@ -128,9 +180,10 @@ public class Solution implements CommandLineRunner {
     deleteFacility(f1);
     // deleteAllFacilities(listFacility);
   }
-  
+
   /**
-   * Test deleting all facilities to see that the the corresponding Machine and Stock also get deleted
+   * Test deleting all facilities to see that the the corresponding Machine and Stock also get
+   * deleted
    */
   private void testDeleteAllFacilities() {
     List<Facility> listFacility = facilityRepository.getAllFacilities();
