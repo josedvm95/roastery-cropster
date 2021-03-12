@@ -45,6 +45,9 @@ public class Solution implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
+    // Cleanup the tables
+    cleanUpTables();
+
     generateTask2Data();
 
     // Values I used for testing Task 1
@@ -55,9 +58,6 @@ public class Solution implements CommandLineRunner {
 
     // Test deleting all facilities
     // testDeleteAllFacilities();
-
-    // Cleanup the tables
-    // cleanUpTables();
   }
 
   private void generateTask2Data() {
