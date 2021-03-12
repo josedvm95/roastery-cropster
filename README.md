@@ -1,5 +1,7 @@
 # Cropster Challenge
 
+This project is part of a Challenge consisting in modelling and implementing a small roasting facility.
+
 ### Task 1
 This is the ER diagram corresponding to the modeled database:
 ![ER Diagram](/doc/ER-diagram.png)
