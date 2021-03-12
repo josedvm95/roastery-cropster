@@ -178,7 +178,6 @@ public class Solution implements CommandLineRunner {
   private void testDeleteFacility() {
     Facility f1 = facilityRepository.getByName("facility1");
     deleteFacility(f1);
-    // deleteAllFacilities(listFacility);
   }
 
   /**
