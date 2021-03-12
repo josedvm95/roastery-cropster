@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "coffees")
@@ -22,6 +23,7 @@ public class GreenCoffee {
   @Column(length = 128)
   private String name;
   
+  @JsonIgnore
   @OneToMany(mappedBy = "greenCoffee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
   private Set<RoastingProcess> roastingProcesses;
 

@@ -61,6 +61,7 @@ public class Machine {
   }
 
   public Facility getFacility() {
+    facility.setMachines(null);
     return facility;
   }
 

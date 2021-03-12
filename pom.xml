@@ -15,6 +15,9 @@
 	<description>Challenge for recruiting process</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+		<!-- automatically run annotation processors within the incremental compilation -->
+  		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -36,6 +39,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+	        <groupId>org.mapstruct</groupId>
+	        <artifactId>mapstruct</artifactId>
+	        <version>${org.mapstruct.version}</version>
+    	</dependency>
 	</dependencies>
 
 	<build>
@@ -43,6 +51,18 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+				        <path>
+				            <groupId>org.mapstruct</groupId>
+				            <artifactId>mapstruct-processor</artifactId>
+				            <version>${org.mapstruct.version}</version>
+				        </path>
+				    </annotationProcessorPaths>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "facilities")
@@ -21,12 +22,18 @@ public class Facility {
   @Column(length = 128)
   private String name;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "facility", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
   private Set<Machine> machines;
 
   public Facility() {}
 
   public Facility(String name) {
+    this.name = name;
+  }
+  
+  public Facility(Integer id, String name) {
+    this.id = id;
     this.name = name;
   }
 

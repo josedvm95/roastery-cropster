@@ -1,5 +1,7 @@
 package com.cropster.challenge.delval.model;
 
+import java.math.BigDecimal;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -20,11 +22,12 @@ public class Stock {
   @ManyToOne
   private GreenCoffee greenCoffee;
 
-  private Integer amount;
+  @Column(precision = 10, scale = 2, nullable = false)
+  private BigDecimal amount;
 
   public Stock() {}
 
-  public Stock(Facility facility, GreenCoffee greenCoffee, Integer amount) {
+  public Stock(Facility facility, GreenCoffee greenCoffee, BigDecimal amount) {
     this.facility = facility;
     this.greenCoffee = greenCoffee;
     this.amount = amount;
@@ -55,11 +58,11 @@ public class Stock {
     this.greenCoffee = greenCoffee;
   }
 
-  public Integer getAmount() {
+  public BigDecimal getAmount() {
     return amount;
   }
 
-  public void setAmount(Integer amount) {
+  public void setAmount(BigDecimal amount) {
     this.amount = amount;
   }
 }

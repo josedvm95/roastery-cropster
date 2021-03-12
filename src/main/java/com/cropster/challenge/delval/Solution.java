@@ -108,10 +108,10 @@ public class Solution implements CommandLineRunner {
    * 
    * @return Integer random weight
    */
-  private Integer generateRandomWeight() {
+  private BigDecimal generateRandomWeight() {
     Random randomNumber = new Random();
-    return randomNumber.nextInt((Constants.MAX_WEIGHT - Constants.MIN_WEIGHT) + 1)
-        + Constants.MIN_WEIGHT;
+    return BigDecimal.valueOf(randomNumber.nextInt((Constants.MAX_WEIGHT - Constants.MIN_WEIGHT) + 1)
+        + Constants.MIN_WEIGHT);
   }
 
   /**
@@ -145,9 +145,9 @@ public class Solution implements CommandLineRunner {
 
     facilityRepository.saveAll(listFacilities);
 
-    Stock s1 = new Stock(f1, gc1, 2000);
-    Stock s2 = new Stock(f1, gc2, 3400);
-    Stock s3 = new Stock(f2, gc1, 7000);
+    Stock s1 = new Stock(f1, gc1, BigDecimal.valueOf(2000));
+    Stock s2 = new Stock(f1, gc2, BigDecimal.valueOf(3400));
+    Stock s3 = new Stock(f2, gc1, BigDecimal.valueOf(7000));
     List<Stock> listStocks = Arrays.asList(s1, s2, s3);
     stockRepository.saveAll(listStocks);
   }

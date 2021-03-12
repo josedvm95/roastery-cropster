@@ -8,7 +8,7 @@ import com.cropster.challenge.delval.model.Facility;
 public interface FacilityRepository extends CrudRepository<Facility, Integer> {
   Facility getByName(String name);
   
-  @Query(value = "SELECT * FROM facilities", nativeQuery = true)
+  @Query(value = "SELECT amount, facility_id, green_coffee_id FROM facilities", nativeQuery = true)
   List<Facility> getAllFacilities();
 
 }

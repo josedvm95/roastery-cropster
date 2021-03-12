@@ -15,4 +15,8 @@ public final class Constants {
   public static final Integer MIN_WEIGHT = 500;
   
   public static final Integer MAX_WEIGHT = 10000;
+  
+  public static final Integer START_WEIGHT_MIN = 65;
+  
+  public static final Integer START_WEIGHT_MAX = 100;
 }
