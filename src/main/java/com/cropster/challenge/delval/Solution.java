@@ -60,6 +60,9 @@ public class Solution implements CommandLineRunner {
     // testDeleteAllFacilities();
   }
 
+  /**
+   * Populate the database with data from the Task 2 of the Challenge
+   */
   private void generateTask2Data() {
     List<GreenCoffee> listCoffees = new ArrayList<GreenCoffee>();
     for (String coffee : Constants.GREEN_COFFEES) {
@@ -100,12 +103,20 @@ public class Solution implements CommandLineRunner {
     stockRepository.saveAll(listStocks);
   }
 
+  /**
+   * Generate a random weight between MAX_WEIGHT and MIN_WEIGHT
+   * 
+   * @return Integer random weight
+   */
   private Integer generateRandomWeight() {
     Random randomNumber = new Random();
     return randomNumber.nextInt((Constants.MAX_WEIGHT - Constants.MIN_WEIGHT) + 1)
         + Constants.MIN_WEIGHT;
   }
 
+  /**
+   * Populate the database with sample data
+   */
   private void setInitialValues() {
     // Insert a few test values in the database
     GreenCoffee gc1 = new GreenCoffee("Java");
