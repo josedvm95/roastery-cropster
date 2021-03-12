@@ -21,6 +21,7 @@ public class Machine {
   @Column(length = 128)
   private String name;
 
+  @Column(nullable = false)
   private Integer capacity;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
