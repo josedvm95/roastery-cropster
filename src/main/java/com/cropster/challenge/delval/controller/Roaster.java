@@ -6,35 +6,41 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.cropster.challenge.delval.constants.Constants;
+import com.cropster.challenge.delval.dto.FacilityDTO;
+import com.cropster.challenge.delval.mappers.FacilityMapper;
 import com.cropster.challenge.delval.model.Facility;
 import com.cropster.challenge.delval.model.GreenCoffee;
 import com.cropster.challenge.delval.model.Machine;
-import com.cropster.challenge.delval.model.RoastingProcess;
 import com.cropster.challenge.delval.model.Stock;
 import com.cropster.challenge.delval.repositories.FacilityRepository;
 import com.cropster.challenge.delval.repositories.GreencoffeeRepository;
 import com.cropster.challenge.delval.repositories.MachineRepository;
+import com.cropster.challenge.delval.repositories.RoastingProcessRepository;
 import com.cropster.challenge.delval.repositories.StockRepository;
 
 public class Roaster {
-  @Autowired
   private GreencoffeeRepository greencoffeeRepository;
 
-  @Autowired
   private MachineRepository machineRepository;
 
-  @Autowired
   private StockRepository stockRepository;
 
-  @Autowired
   private FacilityRepository facilityRepository;
 
-  @Autowired
-  private RoastingProcess roastingProcess;
+  private RoastingProcessRepository roastingProcessRepository;
 
   public Roaster() {}
+  
+  public Roaster(GreencoffeeRepository greencoffeeRepository, MachineRepository machineRepository,
+      StockRepository stockRepository, FacilityRepository facilityRepository,
+      RoastingProcessRepository roastingProcessRepository) {
+    this.greencoffeeRepository = greencoffeeRepository;
+    this.machineRepository = machineRepository;
+    this.stockRepository = stockRepository;
+    this.facilityRepository = facilityRepository;
+    this.roastingProcessRepository = roastingProcessRepository;
+  }
 
   /**
    * Start a random roasting process
@@ -43,19 +49,23 @@ public class Roaster {
    */
   public int roast() {
     // Pick one facility randomly
-    Facility facility = getRandomFacility();
+    FacilityDTO facility = getRandomFacility();
+    
+    if (facility == null) {
+      return -1;
+    }
 
     // Pick one random machine of the previously chosen facility
-    Machine machine = getRandomMachine(facility);
+//    Machine machine = getRandomMachine(facility);
 
     // Pick a random green coffee from the facility's stock
-    GreenCoffee greenCoffee = getRandomGreenCoffee(facility);
+//    GreenCoffee greenCoffee = getRandomGreenCoffee(facility);
 
     // Pick a random start weight
-    BigDecimal weight = getRandomStartWeight(machine);
+//    BigDecimal weight = getRandomStartWeight(machine);
 
     // Update stock amount in database
-    stockRepository.updateAmount(facility.getId(), greenCoffee.getId(), weight);
+//    stockRepository.updateAmount(facility.getId(), greenCoffee.getId(), weight);
 
     return 0;
   }
@@ -65,12 +75,22 @@ public class Roaster {
    * 
    * @return Facility
    */
-  private Facility getRandomFacility() {
+  private FacilityDTO getRandomFacility() {
     List<Facility> listFacilities = new ArrayList<Facility>();
-    listFacilities = facilityRepository.getAllFacilities();
+    List<FacilityDTO> listFacilitiesDTO = new ArrayList<FacilityDTO>();
+    Iterable<Facility> iterable = facilityRepository.findAll();
+    iterable.forEach(listFacilities::add);
+    listFacilitiesDTO = listFacilities.stream()
+    .map(this::convertToDto)
+    .collect(Collectors.toList());
     Random randomNumber = new Random();
-    return listFacilities.get(randomNumber.nextInt(listFacilities.size()));
+    FacilityDTO facility = listFacilitiesDTO.get(randomNumber.nextInt(listFacilitiesDTO.size()));
+    return facility != null ? facility : null;
   }
+  
+  private FacilityDTO convertToDto(Facility facility) {
+    return FacilityMapper.INSTANCE.facilityToDto(facility);
+}
 
   /**
    * Get a random machine that belongs to a facility

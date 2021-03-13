@@ -196,8 +196,8 @@ public class Solution implements CommandLineRunner {
    * deleted
    */
   private void testDeleteAllFacilities() {
-    List<Facility> listFacility = facilityRepository.getAllFacilities();
-    deleteAllFacilities(listFacility);
+//    List<Facility> listFacility = facilityRepository.getAllFacilities();
+//    deleteAllFacilities(listFacility);
   }
 
 }
