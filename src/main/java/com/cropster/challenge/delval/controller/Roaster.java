@@ -31,7 +31,7 @@ public class Roaster {
   private RoastingProcessRepository roastingProcessRepository;
 
   public Roaster() {}
-  
+
   public Roaster(GreencoffeeRepository greencoffeeRepository, MachineRepository machineRepository,
       StockRepository stockRepository, FacilityRepository facilityRepository,
       RoastingProcessRepository roastingProcessRepository) {
@@ -50,22 +50,26 @@ public class Roaster {
   public int roast() {
     // Pick one facility randomly
     FacilityDTO facility = getRandomFacility();
-    
+
     if (facility == null) {
       return -1;
     }
 
     // Pick one random machine of the previously chosen facility
-//    Machine machine = getRandomMachine(facility);
+    Machine machine = getRandomMachine(FacilityMapper.INSTANCE.dtoToFacility(facility));
+    
+    if (machine == null) {
+      return -2;
+    }
 
     // Pick a random green coffee from the facility's stock
-//    GreenCoffee greenCoffee = getRandomGreenCoffee(facility);
+    // GreenCoffee greenCoffee = getRandomGreenCoffee(facility);
 
     // Pick a random start weight
-//    BigDecimal weight = getRandomStartWeight(machine);
+    // BigDecimal weight = getRandomStartWeight(machine);
 
     // Update stock amount in database
-//    stockRepository.updateAmount(facility.getId(), greenCoffee.getId(), weight);
+    // stockRepository.updateAmount(facility.getId(), greenCoffee.getId(), weight);
 
     return 0;
   }
@@ -80,17 +84,16 @@ public class Roaster {
     List<FacilityDTO> listFacilitiesDTO = new ArrayList<FacilityDTO>();
     Iterable<Facility> iterable = facilityRepository.findAll();
     iterable.forEach(listFacilities::add);
-    listFacilitiesDTO = listFacilities.stream()
-    .map(this::convertToDto)
-    .collect(Collectors.toList());
+    listFacilitiesDTO =
+        listFacilities.stream().map(this::convertToDto).collect(Collectors.toList());
     Random randomNumber = new Random();
     FacilityDTO facility = listFacilitiesDTO.get(randomNumber.nextInt(listFacilitiesDTO.size()));
     return facility != null ? facility : null;
   }
-  
+
   private FacilityDTO convertToDto(Facility facility) {
     return FacilityMapper.INSTANCE.facilityToDto(facility);
-}
+  }
 
   /**
    * Get a random machine that belongs to a facility
