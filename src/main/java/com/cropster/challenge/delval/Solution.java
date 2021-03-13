@@ -110,8 +110,9 @@ public class Solution implements CommandLineRunner {
    */
   private BigDecimal generateRandomWeight() {
     Random randomNumber = new Random();
-    return BigDecimal.valueOf(randomNumber.nextInt((Constants.MAX_WEIGHT - Constants.MIN_WEIGHT) + 1)
-        + Constants.MIN_WEIGHT);
+    return BigDecimal
+        .valueOf(randomNumber.nextInt((Constants.MAX_WEIGHT - Constants.MIN_WEIGHT) + 1)
+            + Constants.MIN_WEIGHT);
   }
 
   /**
@@ -196,8 +197,8 @@ public class Solution implements CommandLineRunner {
    * deleted
    */
   private void testDeleteAllFacilities() {
-//    List<Facility> listFacility = facilityRepository.getAllFacilities();
-//    deleteAllFacilities(listFacility);
+    List<Facility> listFacility = facilityRepository.getAllFacilities();
+    deleteAllFacilities(listFacility);
   }
 
 }
