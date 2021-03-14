@@ -18,7 +18,7 @@ Facilities:
   * Warehouse Austria, Warehouse Belgium
 
 ### Task 3
-Start a random roasting process:
+* Start a random roasting process:
 ```
 curl localhost:8081/roastery/roast-random
 ```
@@ -46,6 +46,35 @@ Response codes:
 | -3              | No green coffee found                     |
 | -4              | Could not update the amount of coffee     |
 
+* List the available facilities:
+```
+curl localhost:8081/roastery/facilities
+```
+
+* List the available machines:
+```
+curl localhost:8081/roastery/machines
+```
+
+* List the available green coffees:
+```
+curl localhost:8081/roastery/greencoffees
+```
+
+* Get information about a specific facility:
+```
+curl localhost:8081/roastery/facilities/{id}
+```
+
+* Get information about a specific machine:
+```
+curl localhost:8081/roastery/machines/{id}
+```
+
+* Get information about a specific green coffee:
+```
+curl localhost:8081/roastery/greencoffees/{id}
+```
 
 ### Notes
 I made the following assumptions:
@@ -53,3 +82,6 @@ I made the following assumptions:
   * All facilities use the same 5 types of green coffee even if they keep their stock separate.
   * The initial weight of the stock of green coffee is an integer.
   * The starting weight for a roasting process is a percentage of the initial capacity. That percentage is considered to be an integer.
+
+### Next steps
+Repeat the roast simulation until there is not enough green coffee available for roasting the required start weight.
