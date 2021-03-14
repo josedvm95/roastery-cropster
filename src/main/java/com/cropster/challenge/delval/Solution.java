@@ -22,6 +22,7 @@ import com.cropster.challenge.delval.repository.FacilityRepository;
 import com.cropster.challenge.delval.repository.GreencoffeeRepository;
 import com.cropster.challenge.delval.repository.MachineRepository;
 import com.cropster.challenge.delval.repository.StockRepository;
+import com.cropster.challenge.delval.service.FacilityService;
 
 @SpringBootApplication
 public class Solution implements CommandLineRunner {
@@ -38,6 +39,9 @@ public class Solution implements CommandLineRunner {
   @Autowired
   private FacilityRepository facilityRepository;
 
+  @Autowired
+  private FacilityService facilityService;
+
   public static void main(String[] args) {
     SpringApplication.run(Solution.class, args);
   }
@@ -53,7 +57,7 @@ public class Solution implements CommandLineRunner {
     // setInitialValues();
 
     // Test deleting a single Facility
-    // testDeleteFacility();
+    testDeleteFacility();
 
     // Test deleting all facilities
     // testDeleteAllFacilities();
@@ -158,27 +162,6 @@ public class Solution implements CommandLineRunner {
   }
 
   /**
-   * Delete a single facility
-   * 
-   * @param f facility to delete
-   */
-  private void deleteFacility(Facility f) {
-    stockRepository.deleteAll(stockRepository.findByFacility(f));
-    facilityRepository.delete(f);
-  }
-
-  /**
-   * Delete all facilities
-   * 
-   * @param list the list of facilities to delete
-   */
-  private void deleteAllFacilities(List<Facility> list) {
-    for (Facility f : list) {
-      deleteFacility(f);
-    }
-  }
-
-  /**
    * Clean up the tables
    */
   private void cleanUpTables() {
@@ -193,7 +176,7 @@ public class Solution implements CommandLineRunner {
    */
   private void testDeleteFacility() {
     Facility f1 = facilityRepository.getByName("facility1");
-    deleteFacility(f1);
+    facilityService.deleteFacility(f1);
   }
 
   /**
@@ -202,7 +185,7 @@ public class Solution implements CommandLineRunner {
    */
   private void testDeleteAllFacilities() {
     List<Facility> listFacility = facilityRepository.getAllFacilities();
-    deleteAllFacilities(listFacility);
+    facilityService.deleteAllFacilities(listFacility);
   }
 
 }
