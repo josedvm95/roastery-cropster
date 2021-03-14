@@ -57,7 +57,7 @@ public class Solution implements CommandLineRunner {
     // setInitialValues();
 
     // Test deleting a single Facility
-    testDeleteFacility();
+    // testDeleteFacility();
 
     // Test deleting all facilities
     // testDeleteAllFacilities();
