@@ -18,10 +18,10 @@ import com.cropster.challenge.delval.model.GreenCoffee;
 import com.cropster.challenge.delval.model.Machine;
 import com.cropster.challenge.delval.model.RoastingProcess;
 import com.cropster.challenge.delval.model.Stock;
-import com.cropster.challenge.delval.repositories.FacilityRepository;
-import com.cropster.challenge.delval.repositories.GreencoffeeRepository;
-import com.cropster.challenge.delval.repositories.MachineRepository;
-import com.cropster.challenge.delval.repositories.StockRepository;
+import com.cropster.challenge.delval.repository.FacilityRepository;
+import com.cropster.challenge.delval.repository.GreencoffeeRepository;
+import com.cropster.challenge.delval.repository.MachineRepository;
+import com.cropster.challenge.delval.repository.StockRepository;
 
 @SpringBootApplication
 public class Solution implements CommandLineRunner {
