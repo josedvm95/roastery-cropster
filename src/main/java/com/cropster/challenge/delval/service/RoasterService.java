@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.cropster.challenge.delval.constants.Constants;
 import com.cropster.challenge.delval.dto.FacilityDTO;
 import com.cropster.challenge.delval.dto.MachineDTO;
@@ -40,6 +41,9 @@ public class RoasterService {
 
   @Autowired
   private RoastingProcessRepository roastingProcessRepository;
+  
+  @Autowired
+  private StockService stockService;
 
   /**
    * Start a random roasting process
@@ -72,7 +76,11 @@ public class RoasterService {
     BigDecimal weight = getRandomStartWeight(machineDto);
 
     // Update stock amount in database
-    stockRepository.updateAmount(facilityDto.getId(), greenCoffeeId, weight);
+    int updated = stockService.updateStock(facilityDto.getId(), greenCoffeeId, weight);
+    
+    if (updated != 1) {
+      return -4;
+    }
 
     return 0;
   }
@@ -144,5 +152,4 @@ public class RoasterService {
             + Constants.START_WEIGHT_MIN) / 100.0;
     return BigDecimal.valueOf(machine.getCapacity() * multiplier);
   }
-
 }

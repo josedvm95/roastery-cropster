@@ -26,6 +26,6 @@ public interface StockRepository extends CrudRepository<Stock, StockPK> {
   @Query(
       value = "UPDATE stock SET amount = amount - :amount WHERE facility_id = :facilityId and green_coffee_id = :greenCoffeeId and amount > 0",
       nativeQuery = true)
-  void updateAmount(Integer facilityId, Integer greenCoffeeId, BigDecimal amount);
+  int updateAmount(Integer facilityId, Integer greenCoffeeId, BigDecimal amount);
 
 }
