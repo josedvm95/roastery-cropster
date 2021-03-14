@@ -9,7 +9,10 @@ import com.cropster.challenge.delval.model.Machine;
 @Mapper
 public interface MachineMapper {
   MachineMapper INSTANCE = Mappers.getMapper(MachineMapper.class);
-  
+
+  @Mapping(target = "facility", ignore = true)
+  Machine dtoToMachine(MachineDTO machineDto);
+
   @Mapping(source = "facility.id", target = "facilityId")
   MachineDTO machineToDto(Machine machine);
 }

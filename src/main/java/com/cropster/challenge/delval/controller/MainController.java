@@ -25,6 +25,7 @@ import com.cropster.challenge.delval.repository.GreencoffeeRepository;
 import com.cropster.challenge.delval.repository.MachineRepository;
 import com.cropster.challenge.delval.repository.RoastingProcessRepository;
 import com.cropster.challenge.delval.repository.StockRepository;
+import com.cropster.challenge.delval.service.RoasterService;
 
 @Controller
 @RequestMapping(path = "/roastery")
@@ -43,6 +44,9 @@ public class MainController {
 
   @Autowired
   private RoastingProcessRepository roastingProcessRepository;
+  
+  @Autowired
+  private RoasterService roasterService;
 
   @PostMapping(path = "/add")
   public @ResponseBody String addNewCoffee(@RequestParam String name) {
@@ -62,9 +66,10 @@ public class MainController {
 
   @GetMapping(path = "/roast-random")
   public @ResponseBody Integer roastRandomCoffee() {
-    Roaster roaster = new Roaster(greencoffeeRepository, machineRepository, stockRepository,
-        facilityRepository, roastingProcessRepository);
-    return roaster.roast();
+//    RoasterService roaster = new RoasterService(greencoffeeRepository, machineRepository, stockRepository,
+//        facilityRepository, roastingProcessRepository);
+    
+    return roasterService.roast();
   }
 
   @GetMapping(path = "/greencoffees")
