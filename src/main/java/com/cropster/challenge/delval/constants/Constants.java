@@ -10,13 +10,16 @@ public final class Constants {
 
   public static final String[] FACILITIES = {"Warehouse Austria", "Warehouse Belgium"};
 
+  public static final String[] PRODUCTS =
+      {"Aromatic", "Flavorful", "Nice Toasted", "Brown Extra", "Super Nice"};
+
   public static final String[] MACHINES = {"machine 001", "machine 002", "machine 003"};
 
   public static final Integer MIN_WEIGHT = 500;
-  
+
   public static final Integer MAX_WEIGHT = 10000;
-  
+
   public static final Integer START_WEIGHT_MIN = 65;
-  
+
   public static final Integer START_WEIGHT_MAX = 100;
 }

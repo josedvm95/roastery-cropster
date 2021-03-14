@@ -1,6 +1,7 @@
 package com.cropster.challenge.delval.service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,9 @@ import com.cropster.challenge.delval.mappers.FacilityMapper;
 import com.cropster.challenge.delval.mappers.MachineMapper;
 import com.cropster.challenge.delval.mappers.StockMapper;
 import com.cropster.challenge.delval.model.Facility;
+import com.cropster.challenge.delval.model.GreenCoffee;
 import com.cropster.challenge.delval.model.Machine;
+import com.cropster.challenge.delval.model.RoastingProcess;
 import com.cropster.challenge.delval.model.Stock;
 import com.cropster.challenge.delval.repository.FacilityRepository;
 import com.cropster.challenge.delval.repository.GreencoffeeRepository;
@@ -39,9 +42,6 @@ public class RoasterService {
   @Autowired
   private FacilityRepository facilityRepository;
 
-  @Autowired
-  private RoastingProcessRepository roastingProcessRepository;
-  
   @Autowired
   private StockService stockService;
 
@@ -77,7 +77,7 @@ public class RoasterService {
 
     // Update stock amount in database
     int updated = stockService.updateStock(facilityDto.getId(), greenCoffeeId, weight);
-    
+
     if (updated != 1) {
       return -4;
     }
