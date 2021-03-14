@@ -67,9 +67,6 @@ public class MainController {
 
   @GetMapping(path = "/roast-random")
   public @ResponseBody RoasterResponse roastRandomCoffee() {
-//    RoasterService roaster = new RoasterService(greencoffeeRepository, machineRepository, stockRepository,
-//        facilityRepository, roastingProcessRepository);
-    
     return roasterService.randomRoast();
   }
 

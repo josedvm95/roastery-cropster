@@ -115,6 +115,8 @@ public class RoasterService {
 
     response
         .setRoastingProcess(RoastingProcessMapper.INSTANCE.roastingProcessToDto(roastingProcess));
+    response.setFacility(facilityDto.getId());
+    response.setMachine(machineDto.getId());
     response.setResponseCode(0);
     return response;
   }
