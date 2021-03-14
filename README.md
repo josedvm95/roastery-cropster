@@ -10,6 +10,13 @@ This project is part of a Challenge consisting in modelling and implementing a s
 This is the ER diagram corresponding to the modeled database:
 ![ER Diagram](/doc/ER-diagram.png)
 
+### Task 2
+The following green coffees and facilities are added to the database.
+Green coffees:
+  * Gesha Natural 91, Aleme Wako, Girma Bekele, Tore Badiya, Carmen Cecilia Montoya
+Facilities:
+  * Warehouse Austria, Warehouse Belgium
+
 ### Notes
 I made the following assumptions:
   * Each facility has its own stock of green coffee.
