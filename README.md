@@ -17,6 +17,36 @@ Green coffees:
 Facilities:
   * Warehouse Austria, Warehouse Belgium
 
+### Task 3
+Start a random roasting process:
+```
+curl localhost:8081/roastery/roast-random
+```
+It returns the following:
+| Name            | Type      | Description                               | Parent          |
+| --------------- | --------- | ----------------------------------------- | --------------- |
+| roastingProcess | Object    |                                           | -               |
+| id              | Integer   | Process identifier                        | roastingProcess |
+| startWeight     | Decimal   | Initial weight                            | roastingProcess |
+| endWeight       | Decimal   | End weight after the process' loss        | roastingProcess |
+| startTime       | Timestamp | Initial time                              | roastingProcess |
+| endTime         | Timestamp | Time when the whole process ended. <br />Including the time it takes to charge the machine | roastingProcess |
+| productName     | String    | Name of the resulting product             | roastingProcess |
+| greenCoffeeId   | Integer   | Green coffee used in the process          | roastingProcess |
+| facility        | Integer   | Facility used in the process              | -               |
+| machine         | Integer   | Machine used in the process               | -               |
+| responseCode    | Integer   | Codes below                               | -               |
+
+Response codes:
+| Code            | Description                               |
+| --------------- | ----------------------------------------- |
+| 0               | Correct process                           |
+| -1              | No facility found                         |
+| -2              | No machine found                          |
+| -3              | No green coffee found                     |
+| -4              | Could not update the amount of coffee     |
+
+
 ### Notes
 I made the following assumptions:
   * Each facility has its own stock of green coffee.
