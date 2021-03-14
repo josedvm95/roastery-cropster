@@ -2,6 +2,10 @@
 
 This project is part of a Challenge consisting in modelling and implementing a small roasting facility.
 
+### Requirements
+1) The Schema "roasting_factory" must exist in a MySQL database
+2) Add the corresponding database authentication in src/main/resources/application.properties
+
 ### Task 1
 This is the ER diagram corresponding to the modeled database:
 ![ER Diagram](/doc/ER-diagram.png)
