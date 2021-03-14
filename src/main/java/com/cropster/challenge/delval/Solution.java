@@ -45,10 +45,9 @@ public class Solution implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    // Cleanup the tables
-    cleanUpTables();
-
-    generateTask2Data();
+    if (isDatabaseEmpty()) {
+      generateTask2Data();
+    }
 
     // Values I used for testing Task 1
     // setInitialValues();
@@ -58,6 +57,11 @@ public class Solution implements CommandLineRunner {
 
     // Test deleting all facilities
     // testDeleteAllFacilities();
+  }
+
+  private boolean isDatabaseEmpty() {
+    return facilityRepository.count() == 0 && machineRepository.count() == 0
+        && greencoffeeRepository.count() == 0 && stockRepository.count() == 0;
   }
 
   /**
