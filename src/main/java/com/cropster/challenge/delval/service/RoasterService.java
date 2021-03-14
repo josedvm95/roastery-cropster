@@ -2,6 +2,9 @@ package com.cropster.challenge.delval.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,23 +12,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.cropster.challenge.delval.constants.Constants;
 import com.cropster.challenge.delval.dto.FacilityDTO;
 import com.cropster.challenge.delval.dto.MachineDTO;
 import com.cropster.challenge.delval.dto.StockDTO;
 import com.cropster.challenge.delval.mappers.FacilityMapper;
 import com.cropster.challenge.delval.mappers.MachineMapper;
+import com.cropster.challenge.delval.mappers.RoastingProcessMapper;
 import com.cropster.challenge.delval.mappers.StockMapper;
 import com.cropster.challenge.delval.model.Facility;
 import com.cropster.challenge.delval.model.GreenCoffee;
 import com.cropster.challenge.delval.model.Machine;
+import com.cropster.challenge.delval.model.RoasterResponse;
 import com.cropster.challenge.delval.model.RoastingProcess;
 import com.cropster.challenge.delval.model.Stock;
 import com.cropster.challenge.delval.repository.FacilityRepository;
 import com.cropster.challenge.delval.repository.GreencoffeeRepository;
 import com.cropster.challenge.delval.repository.MachineRepository;
-import com.cropster.challenge.delval.repository.RoastingProcessRepository;
 import com.cropster.challenge.delval.repository.StockRepository;
 
 @Service
@@ -45,44 +48,75 @@ public class RoasterService {
   @Autowired
   private StockService stockService;
 
+  @Autowired
+  private RoastingProcessService roastingProcessService;
+
   /**
    * Start a random roasting process
    * 
-   * @return result 0 if correct
+   * @return RoasterResponse with a responseCode of 0 if it is correct
    */
-  public int roast() {
+  public RoasterResponse randomRoast() {
+    RoasterResponse response = new RoasterResponse();
+    RoastingProcess roastingProcess = new RoastingProcess();
+
     // Pick one facility randomly
     FacilityDTO facilityDto = getRandomFacility();
 
     if (facilityDto == null) {
-      return -1;
+      response.setResponseCode(-1);
+      return response;
     }
 
     // Pick one random machine of the previously chosen facility
     MachineDTO machineDto = getRandomMachine(facilityDto);
 
     if (machineDto == null) {
-      return -2;
+      response.setResponseCode(-2);
+      return response;
     }
 
     // Pick a random green coffee from the facility's stock
     Integer greenCoffeeId = getRandomGreenCoffeeId(facilityDto);
 
     if (greenCoffeeId == null) {
-      return -3;
+      response.setResponseCode(-3);
+      return response;
     }
 
     // Pick a random start weight
-    BigDecimal weight = getRandomStartWeight(machineDto);
+    BigDecimal startWeight = getRandomStartWeight(machineDto);
 
     // Update stock amount in database
-    int updated = stockService.updateStock(facilityDto.getId(), greenCoffeeId, weight);
+    int updated = stockService.updateStock(facilityDto.getId(), greenCoffeeId, startWeight);
 
     if (updated != 1) {
-      return -4;
+      response.setResponseCode(-4);
+      return response;
     }
 
-    return 0;
+    int processTime = getRandomDurationTime();
+
+    int chargingTime = getChargingTime();
+
+    roastingProcess.setStartWeight(startWeight);
+    roastingProcess.setEndWeight(getRandomEndWeight(startWeight));
+    LocalDateTime startTime = getStartDateTime(processTime + chargingTime);
+    roastingProcess.setStartTime(Timestamp.valueOf(startTime));
+    roastingProcess
+        .setEndTime(Timestamp.valueOf(startTime.plusMinutes(processTime + chargingTime)));
+
+    GreenCoffee greenCoffee = greencoffeeRepository.findById(greenCoffeeId).orElse(null);
+    roastingProcess.setGreenCoffee(greenCoffee);
+
+    roastingProcess.setProductName(getRandomProductName());
+
+    roastingProcessService.saveRoastingProcess(roastingProcess);
+
+    response
+        .setRoastingProcess(RoastingProcessMapper.INSTANCE.roastingProcessToDto(roastingProcess));
+    response.setResponseCode(0);
+    return response;
   }
 
   /**
@@ -151,5 +185,83 @@ public class RoasterService {
         (randomNumber.nextInt((Constants.START_WEIGHT_MAX - Constants.START_WEIGHT_MIN) + 1)
             + Constants.START_WEIGHT_MIN) / 100.0;
     return BigDecimal.valueOf(machine.getCapacity() * multiplier);
+  }
+
+  /**
+   * Generate a random weight between MAX_WEIGHT and MIN_WEIGHT
+   * 
+   * @return Integer random weight
+   */
+  private Integer getRandomDurationTime() {
+    Random randomNumber = new Random();
+    return randomNumber.nextInt((Constants.MAX_DURATION - Constants.MIN_DURATION) + 1)
+        + Constants.MIN_DURATION;
+  }
+
+  /**
+   * Generate a random weight between MAX_WEIGHT and MIN_WEIGHT
+   * 
+   * @return Integer random weight
+   */
+  private Integer getChargingTime() {
+    // We consider it takes 7.5 min on average to charge the machine
+    int min = getPoisson((Constants.MAX_CHARGE_TIME + Constants.MIN_CHARGE_TIME) / 2);
+    if (min < Constants.MIN_CHARGE_TIME) {
+      min = Constants.MIN_CHARGE_TIME;
+    } else if (min > Constants.MAX_CHARGE_TIME) {
+      min = Constants.MAX_CHARGE_TIME;
+    }
+    return min;
+  }
+
+  /**
+   * Get a random number with Poisson distribution
+   * 
+   * @param lambda
+   * @return number following Poisson distribution
+   */
+  private int getPoisson(double lambda) {
+    double limit = Math.exp(-lambda);
+    double p = 1.0;
+    int k = 0;
+
+    do {
+      k++;
+      p *= Math.random();
+    } while (p > limit);
+
+    return k - 1;
+  }
+
+  private LocalDateTime getStartDateTime(Integer duration) {
+    return LocalDate.now().atTime(getStartTime(duration));
+  }
+
+  private LocalTime getStartTime(Integer duration) {
+    Random randomNumber = new Random();
+    int min = Constants.OPEN_TIME.getHour() * 60 + Constants.OPEN_TIME.getMinute();
+    int max = Constants.CLOSE_TIME.minusMinutes(duration).getHour() * 60
+        + Constants.CLOSE_TIME.getMinute();
+    int minutes = randomNumber.nextInt((max - min) + 1) + min;
+
+    return LocalTime.of(minutes / 60, minutes % 60);
+  }
+
+  private String getRandomProductName() {
+    Random randomNumber = new Random();
+    return Constants.PRODUCTS[randomNumber.nextInt(Constants.PRODUCTS.length)];
+  }
+
+  /**
+   * Get a random weight loss
+   * 
+   * @param machineDto machine used in the process
+   * @return weight
+   */
+  private BigDecimal getRandomEndWeight(BigDecimal startWeight) {
+    Random randomNumber = new Random();
+    double multiplier = 1 - (randomNumber.nextInt((Constants.MAX_WEIGHT_LOSS - Constants.MIN_WEIGHT_LOSS) + 1)
+        + Constants.MIN_WEIGHT_LOSS) / 100.0;
+    return startWeight.multiply(BigDecimal.valueOf(multiplier));
   }
 }

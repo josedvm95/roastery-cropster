@@ -20,6 +20,7 @@ import com.cropster.challenge.delval.mappers.MachineMapper;
 import com.cropster.challenge.delval.model.Facility;
 import com.cropster.challenge.delval.model.GreenCoffee;
 import com.cropster.challenge.delval.model.Machine;
+import com.cropster.challenge.delval.model.RoasterResponse;
 import com.cropster.challenge.delval.repository.FacilityRepository;
 import com.cropster.challenge.delval.repository.GreencoffeeRepository;
 import com.cropster.challenge.delval.repository.MachineRepository;
@@ -65,11 +66,11 @@ public class MainController {
   }
 
   @GetMapping(path = "/roast-random")
-  public @ResponseBody Integer roastRandomCoffee() {
+  public @ResponseBody RoasterResponse roastRandomCoffee() {
 //    RoasterService roaster = new RoasterService(greencoffeeRepository, machineRepository, stockRepository,
 //        facilityRepository, roastingProcessRepository);
     
-    return roasterService.roast();
+    return roasterService.randomRoast();
   }
 
   @GetMapping(path = "/greencoffees")
